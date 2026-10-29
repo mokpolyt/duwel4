@@ -249,13 +249,13 @@ function stepBomb(e,dt){const f=e.f,g=e.tg,t=e.tm;f.bmD=1;
  else if(t<3.7){if(t<2.3){f.jy=0;f.face=-dir;f.x=g.x+dir*60}else{if(e.rx===undefined){e.rx=f.x;e.cx=f.x<540?55:1025}const u=Math.min(1,(t-2.3)/1.1),v=ez(u);f.face=Math.sign(e.cx-e.rx)||f.face;f.x=e.rx+(e.cx-e.rx)*v;f.jy=-300*Math.max(0,(u-.35)/.65);f.anim=.3}
   if(!e.pl){e.pl=1;f.anim=.4;spawn(g.x,G-95,'#ff4a2a',10,4)}
   if(t>=2.1&&!e.kk){e.kk=1;f.anim=.5;spawn(g.x,G-70,'#ffd84a',16,8);shake=Math.max(shake,10);if(!imm(g)&&!g.dead){dealt(f,g,14,'Kick',true);if(!g.dead){g.kb=-dir*900;g.down=Math.max(g.down,1.6);g.fly=true;g.jv=-380}}}}
- else{f.jy=0;if(!e.xd){e.xd=1;e.xp=0;e.ex=g.x;shake=Math.max(shake,30);envFlash=Math.max(envFlash,.9);spawn(g.x,G-90,'#ff8a1a',90,12);spawn(g.x,G-90,'#ffe08a',60,14);spawn(g.x,G-60,'#333',50,8);splat(g.x,true,14);
+ else{f.jy=0;if(!e.xd){e.xd=1;e.xp=0;e.ex=g.x;shake=Math.max(shake,48);envFlash=Math.max(envFlash,1);spawn(g.x,G-90,'#ff8a1a',200,18);spawn(g.x,G-90,'#ffe08a',130,22);spawn(g.x,G-60,'#333',110,12);splat(g.x,true,20);splat(g.x-90,true,14);splat(g.x+90,true,14);
    if(!imm(g)&&!g.dead){dealt(f,g,55,'Bomb Explosion',true);if(!g.dead){g.down=Math.max(g.down,1.6);g.kb=-dir*300;g.fly=true;g.jv=-560;g.rise=100}}}}
  if(e.xp!==undefined)e.xp+=dt;
  return t<4.7}
 function drawBomb(e){const g=e.tg,t=e.tm;if(e.dir===undefined)return;ctx.save();
- if(t>=1.6&&!e.xd){const bx=g.x-(g.face||1)*16,by=G-100;ctx.translate(bx,by);ctx.fillStyle='#15181d';ctx.strokeStyle='#888';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,11,0,7);ctx.fill();ctx.stroke();ctx.fillRect(-3,-16,6,6);ctx.fillStyle=Math.floor(t*10)%2?'#ff2a2a':'#661111';ctx.beginPath();ctx.arc(0,0,3.5,0,7);ctx.fill()}
- else if(e.xp!==undefined&&e.xp<1){const k=e.xp,x=e.ex,r=60+420*Math.min(1,k*2.2),gr=ctx.createRadialGradient(x,G-90,5,x,G-90,r);gr.addColorStop(0,'rgba(255,250,200,'+(1-k)+')');gr.addColorStop(.35,'rgba(255,150,30,'+.9*(1-k)+')');gr.addColorStop(.75,'rgba(180,40,10,'+.6*(1-k)+')');gr.addColorStop(1,'rgba(60,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,G-90,r,0,7);ctx.fill()}
+ if(t>=1.6&&!e.xd){const bx=g.x-(g.face||1)*16,by=G-135;ctx.translate(bx,by);ctx.scale(3.3,3.3);ctx.fillStyle='#15181d';ctx.strokeStyle='#888';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,11,0,7);ctx.fill();ctx.stroke();ctx.fillRect(-3,-16,6,6);ctx.fillStyle=Math.floor(t*10)%2?'#ff2a2a':'#661111';ctx.beginPath();ctx.arc(0,0,3.5,0,7);ctx.fill()}
+ else if(e.xp!==undefined&&e.xp<1){const k=e.xp,x=e.ex,r=140+900*Math.min(1,k*2.2),gr=ctx.createRadialGradient(x,G-90,5,x,G-90,r);gr.addColorStop(0,'rgba(255,250,200,'+(1-k)+')');gr.addColorStop(.35,'rgba(255,150,30,'+.9*(1-k)+')');gr.addColorStop(.75,'rgba(180,40,10,'+.6*(1-k)+')');gr.addColorStop(1,'rgba(60,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,G-90,r,0,7);ctx.fill();ctx.strokeStyle='rgba(255,230,170,'+.8*(1-k)+')';ctx.lineWidth=10;ctx.beginPath();ctx.arc(x,G-90,r*.92,0,7);ctx.stroke()}
  ctx.restore()}
 function stepUmb(e,dt){const f=e.f,g=e.tg,t=e.tm;f.umD=1;if(e.tm>0&&abortFx(e,f,g)){f.cfx=null;return false}
  f.cfx=t<6?g.x-f.face*70:null;f.face=Math.sign(g.x-f.x)||f.face;f.anim=Math.max(f.anim,.25);f.gcd=Math.max(f.gcd,.4);e.n=e.n||0;
@@ -1068,9 +1068,9 @@ function sailHair(f){const g=f?(f.gzs>0?Math.min(1,f.gzs):f.giant>0?1:0):0;ctx.s
  ctx.beginPath();ctx.moveTo(8,-92);ctx.quadraticCurveTo(24,-84,22,-52);ctx.lineTo(14,-54);ctx.quadraticCurveTo(14,-76,2,-86);ctx.closePath();ctx.fill();
  ctx.fillStyle=f&&f.mbk>0?'#0b0b0f':'#e0245a';ctx.beginPath();ctx.arc(-12,-93,4,0,7);ctx.fill();ctx.restore()}
 function castSail(f,tg,r){f.anim=.4;
- // weights: kick 15 / spin&punch 15 / black rider 22 / bomb 15 / head grab 18 / hoe 10 / falling moon 5 (once per fight)
+ // weights: kick 15 / spin&punch 15 / black rider 20 / bomb 15 / head grab 20 / hoe 10 / falling moon 5 (once per fight)
  // she NEVER uses the same technique twice in a row: the last one is removed and the rest are re-weighted
- const W=[['kick',15],['spin',15],['rider',22],['bomb',15],['grab',18],['hoe',10],['moon',5]].filter(w=>w[0]!=f.lastSail&&!(w[0]=='moon'&&f.moonD));
+ const W=[['kick',15],['spin',15],['rider',20],['bomb',15],['grab',20],['hoe',10],['moon',5]].filter(w=>w[0]!=f.lastSail&&!(w[0]=='moon'&&f.moonD));
  let acc=r*W.reduce((a,w)=>a+w[1],0),m=W[W.length-1][0];for(const w of W){if(acc<w[1]){m=w[0];break}acc-=w[1]}
  if(m!='rider'&&m!='kick'&&!(FR(tg)&&!imm(tg)))m=f.lastSail=='rider'?'kick':'rider';
  f.lastSail=m;
@@ -1148,19 +1148,21 @@ function stepSailHoe(e,dt){const f=e.f,g=e.tg,t=e.tm;
  if(!e.fin&&abortFx(e,f,g)){clean();return false}
  if(e.h===undefined)e.h={};
  const dir=Math.sign(g.x-f.x)||1;f.face=dir;f.gcd=Math.max(f.gcd,.8);
- if(t<1.15){f.cfx=g.x-dir*78;if(t<.6)f.anim=Math.max(f.anim,.3)}else{if(e.hx===undefined)e.hx=f.x;f.cfx=e.hx}
- if(t>=.6&&!e.h.c){e.h.c=1;f.anim=.4;dealt(f,g,18,'Hoe Chop',false);shake=Math.max(shake,10);if(!imm(g)){spawn(g.x-dir*20,G-70,'#d9c9a0',14,6);spawn(g.x,G-90,'#ffd84a',10,6)}}
- if(t>=1.15&&!e.h.s){e.h.s=1;f.anim=.4;dealt(f,g,24,'Hoe Scoop',false);shake=Math.max(shake,12);
-  if(!imm(g)&&!g.dead&&Math.abs(g.x-f.x)<160){g.kb=dir*420;g.fly=true;g.jv=-640;g.rise=60;spawn(g.x,G-80,'#ffd84a',14,7)}}
- if(t>=1.9){clean();f.gcd=Math.max(f.gcd,R(.8,1.2));return false}return true}
-function drawSailHoe(e){const f=e.f,t=e.tm,dir=f.face||1;if(t>=1.9)return;
- const ph=t=>t<.45?-.5+.08*Math.sin(t*22):t<.62?-.5+2*ez((t-.45)/.17):t<1.0?1.5+.5*ez((t-.62)/.3):t<1.15?2+.5*ez((t-1.0)/.15):t<1.35?2.5-2.6*ez((t-1.15)/.2):-.1;
- const p=ph(t),h=hand(f),L=64,tx=h[0]+dir*L*Math.sin(p),ty=h[1]-L*Math.cos(p),bx=dir*Math.cos(p),by=Math.sin(p);
+ if(t<2.3){f.cfx=g.x-dir*118;if(t<.6)f.anim=Math.max(f.anim,.3)}else{if(e.hx===undefined)e.hx=f.x;f.cfx=e.hx}
+ // 7 attacks: 6 chops, then a big scoop that launches the enemy
+ for(let k=0;k<6;k++){if(t>=.61+k*.28&&!e.h['c'+k]){e.h['c'+k]=1;f.anim=.4;dealt(f,g,8,'Hoe Chop',false);shake=Math.max(shake,8);if(!imm(g)){spawn(g.x-dir*20,G-70,'#d9c9a0',10,6);spawn(g.x,G-90,'#ffd84a',8,6)}}}
+ if(t>=2.36&&!e.h.s){e.h.s=1;f.anim=.4;dealt(f,g,24,'Hoe Scoop',false);shake=Math.max(shake,16);
+  if(!imm(g)&&!g.dead&&Math.abs(g.x-f.x)<200){g.kb=dir*480;g.fly=true;g.jv=-680;g.rise=60;spawn(g.x,G-80,'#ffd84a',22,8)}}
+ if(t>=2.9){clean();f.gcd=Math.max(f.gcd,R(.8,1.2));return false}return true}
+function drawSailHoe(e){const f=e.f,t=e.tm,dir=f.face||1;if(t>=2.9)return;
+ const ph=t=>{if(t<.45)return -.5+.08*Math.sin(t*22);if(t<2.13){const u=((t-.45)%.28)/.28;return u<.57?-.5+2*ez(u/.57):1.5-2*ez((u-.57)/.43)}
+  if(t<2.28)return 1.5+1.0*ez((t-2.13)/.15);if(t<2.48)return 2.5-2.6*ez((t-2.28)/.2);return -.1};
+ const p=ph(t),h=hand(f),L=130,BL=46,tx=h[0]+dir*L*Math.sin(p),ty=h[1]-L*Math.cos(p),bx=dir*Math.cos(p),by=Math.sin(p);
  ctx.save();ctx.lineCap='round';
- if((t>=.5&&t<.7)||(t>=1.15&&t<1.45)){for(let j=1;j<=3;j++){const q=ph(Math.max(0,t-.025*j));ctx.strokeStyle='rgba(255,255,255,'+(.5-.14*j)+')';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(h[0],h[1]);ctx.lineTo(h[0]+dir*L*Math.sin(q),h[1]-L*Math.cos(q));ctx.stroke()}}
- ctx.strokeStyle='#8a5a2b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(h[0]-dir*Math.sin(p)*14,h[1]+Math.cos(p)*14);ctx.lineTo(tx,ty);ctx.stroke();
- ctx.strokeStyle='#aeb6c0';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx+bx*22,ty+by*22);ctx.stroke();
- ctx.strokeStyle='#e8edf2';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tx+bx*3,ty+by*3);ctx.lineTo(tx+bx*21,ty+by*21);ctx.stroke();
+ if(t>=.45&&t<2.55){for(let j=1;j<=3;j++){const q=ph(Math.max(0,t-.025*j));ctx.strokeStyle='rgba(255,255,255,'+(.5-.14*j)+')';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(h[0],h[1]);ctx.lineTo(h[0]+dir*L*Math.sin(q),h[1]-L*Math.cos(q));ctx.stroke()}}
+ ctx.strokeStyle='#8a5a2b';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(h[0]-dir*Math.sin(p)*26,h[1]+Math.cos(p)*26);ctx.lineTo(tx,ty);ctx.stroke();
+ ctx.strokeStyle='#aeb6c0';ctx.lineWidth=17;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(tx+bx*BL,ty+by*BL);ctx.stroke();
+ ctx.strokeStyle='#e8edf2';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(tx+bx*5,ty+by*5);ctx.lineTo(tx+bx*(BL-2),ty+by*(BL-2));ctx.stroke();
  ctx.restore()}
 
 function stepFireGiant(e,dt){const f=e.f,g=e.tg;
