@@ -50,7 +50,7 @@ function init(pk){mergeUsed=false;let ids=ROSTER.slice().sort(()=>Math.random()-
 function slots(){D[0].tx=390;D[1].tx=690;D.forEach(d=>d.ts=1.7);Wt.forEach((w,i)=>{if(!w.helping){w.tx=WS[i];w.ts=.85}});benchQ.forEach(b=>b.tx=1300)}
 let duelN=0,btnT=0;const FB=[430,486,220,40];
 function fullLifeAll(){[...D,...Wt,...benchQ].forEach(f=>{if(f&&!f.dead&&!f.tomb){f.hp=f.mx;f.h0=f.mx}});btnT=0;banner='FULL LIFE! Every fighter is restored!';bannerT=2;shake=Math.max(shake,6)}
-function start(){duelN++;btnT=duelN>=2?4:0;phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.moonD=0;d.spw=0;d.spL=0;d.lastSail=null;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.al=undefined;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.so=null;d.flp=0;d.sgh=0;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.qzDone=0;d.qzN=0;d.gw=0;d.wst=0;d.wlau=0;d.wlh=0;d.wbat=null;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false;mergeUsed=false;mergeAt=R(5,12);spiderUsed=false;spiderAt=R(6,14);mtUsed=false;ubUsed=false;ubAt=R(4,9)}
+function start(){slowT=0;duelN++;btnT=duelN>=2?4:0;phase='intro';pt=0;dur=0;goal=R(40,70);winner=null;slots();D.forEach(d=>{d.h0=d.hp;d.dead=false;d.moonD=0;d.spw=0;d.spL=0;d.lastSail=null;d.riderN=0;d.lastTech=null;d.dt=0;d.rolled=false;d.gcd=R(1.5,2.2);d.down=0;d.hole=false;d.al=undefined;d.clone=null;d.fly=false;d.jy=0;d.jv=0;d.kb=0;d.tomb=false;d.arm=0;d.giant=0;d.df=null;d.cloud=0;d.demon=0;d.tail=0;d.shock=0;d.nohead=false;d.sink=0;d.hole2=false;d.swarm=null;d.burn=0;d.cy=0;d.cfx=null;d.hvt=0;d.whale=null;d.tree=null;d.rise=0;d.sw=null;d.tn=null;d.kk=null;d.fm=null;d.dk=null;d.sm=null;d.so=null;d.flp=0;d.sgh=0;d.sF=0;d.sC=0;d.cruU=0;d.sp=0;d.sit=0;d.sitU=0;d.rv=null;d.ff=0;d.gzs=0;d.rise=0;d.bleed=0;d.char=0;d.split=0;d.al=undefined;d.qzDone=0;d.qzN=0;d.gw=0;d.wst=0;d.wlau=0;d.wlh=0;d.wbat=null;d.tr=R(3,8)});projs=[];fx=[];holes=[];heads=[];nails=[];amb=null;ambUsed=false;mergeUsed=false;mergeAt=R(5,12);spiderUsed=false;spiderAt=R(6,14);mtUsed=false;ubUsed=false;ubAt=R(4,9)}
 function sched(d,fn){timers.push({d,fn})}
 function spawn(x,y,c,n,sp=3){if(c==='#b3121a'||c==='#7a0a10')n=Math.round(n*.03);for(let i=0;i<n;i++)parts.push({x,y,vx:R(-sp,sp),vy:R(-sp,sp*.6),l:R(.3,.9),c,r:R(2,5)})}
 function txt(x,y,s,c){texts.push({x,y,s,c,l:1.1})}
@@ -778,8 +778,8 @@ if(f.whale){const w=f.whale,en=D[1-i];w.tm+=dt;w.tick-=dt;en.down=Math.max(en.do
  if(f.giant>0){f.giant-=dt;f.gr-=dt;if(f.gr<=0&&!f.dead){f.gr=1.1;f.anim=.5;const en=D[1-i];sched(.25,()=>{fx.push({k:'m',f,tg:en,col:'#fff6c8',tm:0,big:1});dealt(f,en,42,'Giant Ray');if(!en.dead&&!imm(en)){en.kb=f.face*450;en.down=1}})}}
  else if(f.demon>0){f.demon-=dt;f.dr-=dt;if(f.dr<=0&&!f.dead&&!f.down&&!f.fly&&!(f.shock>0)){f.dr=1.2;f.anim=.5;f.tail=.5;const en=D[1-i];sched(.25,()=>{dealt(f,en,30,'Tail Whip');spawn(en.x,G-90,'#ff3a10',14,5);if(!en.dead&&!imm(en)){en.kb=f.face*380;en.down=.7}})}}
  else if(f.gcd<=0&&!f.dead&&!f.down&&!f.fly&&!(f.shock>0)&&!(amb&&amb.pause)&&!f.rv)castH(f,D[1-i])})}
- mergeTick(dt);spiderTick(dt);mageTreeTick(dt);ubTick(dt);if(phase=='end'&&pt>1.3){const q=D[0].dead?D[0]:D[1];if(!q.tomb){q.tomb=true;tombs.push({x:q.hole2?q.x-q.face*230:q.x,t:q.t});if(tombs.length>5)tombs.shift();spawn(q.x,G-20,'#bbb',30,4)}}
- if(phase=='end'&&pt>3.2&&(!rescue||rescue.t>7)){const lo=D[0].dead?0:1,w=D[1-lo],l=D[lo];rescue=null;
+ mergeTick(dt);spiderTick(dt);mageTreeTick(dt);ubTick(dt);if(phase=='end'&&pt>1.3&&!fx.some(e=>e.k=='Gi')){const q=D[0].dead?D[0]:D[1];if(!q.tomb){q.tomb=true;tombs.push({x:q.hole2?q.x-q.face*230:q.x,t:q.t});if(tombs.length>5)tombs.shift();spawn(q.x,G-20,'#bbb',30,4)}}
+ if(phase=='end'&&pt>3.2&&(!rescue||rescue.t>7)&&!fx.some(e=>e.k=='Gi')){const lo=D[0].dead?0:1,w=D[1-lo],l=D[lo];rescue=null;
  const Q=[...Wt,...benchQ];
  if(false){l.hp=l.mx;l.dead=false;l.tomb=false;l.dt=0;l.rolled=false;l.nohead=false;l.sink=0;l.hole2=false;l.x=l.tx=1300;l.hv=0;l.burn=0;l.chr=0;l.bk=0;l.swarm=null;l.cloud=0;l.arm=0;l.cy=0;Q.push(l)}
  if(!Q.length){phase='over';pt=0;banner=BN(w.t)+' is the CHAMPION! GAME OVER';bannerT=1e9;Wt=[];benchQ=[]}
@@ -1081,10 +1081,10 @@ function sailHair(f){const g=f?(f.gzs>0?Math.min(1,f.gzs):f.giant>0?1:0):0;ctx.s
 function castSail(f,tg,r){f.anim=.4;
  // weights: kick 15 / spin&punch 15 / black rider 20 / bomb 15 / head grab 20 / hoe 10 / falling moon 5 (once per fight)
  // she NEVER uses the same technique twice in a row: the last one is removed and the rest are re-weighted
- const W=[['kick',15],['spin',15],['rider',20],['bomb',15],['grab',20],['hoe',10],['moon',5]].filter(w=>w[0]!=f.lastSail&&!(w[0]=='moon'&&f.moonD));
+ const W=[['kick',15],['spin',15],['rider',20],['bomb',15],['grab',20],['hoe',10],['moon',5]].filter(w=>w[0]!=f.lastSail&&!(w[0]=='moon'&&f.moonD)&&!(w[0]=='rider'&&(f.riderN||0)>=2));
  let acc=r*W.reduce((a,w)=>a+w[1],0),m=W[W.length-1][0];for(const w of W){if(acc<w[1]){m=w[0];break}acc-=w[1]}
- if(m!='rider'&&m!='kick'&&!(FR(tg)&&!imm(tg)))m=f.lastSail=='rider'?'kick':'rider';
- f.lastSail=m;
+ if(m!='rider'&&m!='kick'&&!(FR(tg)&&!imm(tg))){const alt=['rider','kick'].filter(x=>x!=f.lastSail&&!(x=='rider'&&(f.riderN||0)>=2));if(!alt.length){f.gcd=.6;return}m=alt[0]}
+ f.lastSail=m;if(m=='rider')f.riderN=(f.riderN||0)+1; // BLACK RIDER: max 2 rides per fight
  if(m=='kick'){f.gcd=3.2;f.kk={tm:0,n:0};logS='Sailor · FORWARD KICK!';logT=2;banner='Sailor kicks forward!';bannerT=1.6}
  else if(m=='spin'){f.gcd=6.5;f.anim=.5;logS='Sailor · SPIN & PUNCH!';logT=2.6;banner='Sailor SPINS...';bannerT=1.6;fx.push({k:'SP',f,tg,tm:0})}
  else if(m=='bomb'){f.gcd=6;f.anim=.5;fx.push({k:'Bm',f,tg,tm:0})}
@@ -1532,8 +1532,8 @@ function drawDocRush(d){const w=d.dk,s=d.sc,f=d.face,base=d.y+(d.jy||0)-(d.rise|
  ctx.restore()}
 
 // ===== LAUNCH: 30% on approaching punch/kick -> enemy blasted around the arena =====
-function maybeLaunch(f,g){
- if(Math.random()>=.3||g.dead||phase!=='fight'||imm(g)||g.rise>0||g.fly||g.cfx!=null||g.split>0||g.rv||amb||fx.some(e=>e.k=='J'&&e.tg===g))return false;
+function maybeLaunch(f,g,force){
+ if((!force&&Math.random()>=.3)||g.dead||phase!=='fight'||imm(g)||g.rise>0||g.fly||g.cfx!=null||g.split>0||g.rv||amb||fx.some(e=>e.k=='J'&&e.tg===g))return false;
  g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;if(g.so){g.so=null;g.flp=0;g.rise=0};g.kb=0;g.jy=0;g.jv=0;
  fx.push({k:'J',f,tg:g,tm:0,d:Math.sign(g.x-f.x)||1,x0:g.x,h:{},tr:[]});
  if(f.t!==10){banner='SENT FLYING!';bannerT=1.5;logS=BN(f.t)+' · LAUNCH!';logT=1.6}spawn(g.x,G-90,'#fff',30,8);shake=Math.max(shake,10);return true}
@@ -2205,7 +2205,28 @@ function drawItaMelee(d){const w=d.itm;if(!w)return;const s=d.sc,f=d.face,base=d
   ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.strokeStyle='#0c0b10';ctx.lineWidth=7*s;ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(kx,ky);ctx.lineTo(fx2,fy2);ctx.stroke();ctx.fillStyle='#15131b';ctx.beginPath();ctx.ellipse(fx2+f*4*s,fy2,9*s,5*s,0,0,7);ctx.fill()}
  ctx.restore()}
 // ---- ult reflect: 20% chance each time the enemy casts an ultimate (banner move, long cooldown) ----
-function castH(f,tg){const n=fx.length,b=banner,bt=bannerT;f.irf=0;f.irfD=0;f.irfx=null;const fu=adv(f)&&favUlt(f,tg);if(!fu)cast(f,tg);
+// ===== NO-REPEAT RULE =====
+// Every cast is fingerprinted (log name + effects it spawns). If it is the same technique this fighter used last,
+// the cast is rolled back and re-rolled, so nobody summons the same technique twice in a row.
+function castH(f,tg){
+ const sf={...f},st={...tg},cd0=f.cd?f.cd.slice():null,cd1=tg.cd?tg.cd.slice():null,n0=fx.length,p0=projs.length,t0=timers.length,b0=banner,bt0=bannerT,l0=logS,lt0=logT;
+ const undo=()=>{fx.length=n0;projs.length=p0;timers.length=t0;
+  Object.keys(f).forEach(k=>{if(!(k in sf))delete f[k]});Object.assign(f,sf);if(cd0)f.cd=cd0.slice();
+  Object.keys(tg).forEach(k=>{if(!(k in st))delete tg[k]});Object.assign(tg,st);if(cd1)tg.cd=cd1.slice();
+  banner=b0;bannerT=bt0};
+ for(let a=0;a<10;a++){
+  logS='';logT=-99;
+  castH0(f,tg);
+  const nm=String(logS).replace(/\s*\(FAVOURED\)/,'');
+  const id=[nm,...fx.slice(n0).map(e=>e.k+(e.sub||'')+(e.doc||'')),...projs.slice(p0).map(p=>p.nm||p.sh||'p'),...['kk','sw','tn','so','fm','dk','sm','itm'].filter(k=>f[k]&&!sf[k])].join('|');
+  if(logS===''){logS=l0;logT=lt0}
+  if(!id.replace(/\|/g,'')){f.lastTech=null;return}
+  if(id!==sf.lastTech){f.lastTech=id;return}
+  undo();
+ }
+ // every roll repeated the last technique: wait a moment instead of repeating it
+ logS=l0;logT=lt0;f.gcd=.5}
+function castH0(f,tg){const n=fx.length,b=banner,bt=bannerT;f.irf=0;f.irfD=0;f.irfx=null;const fu=adv(f)&&favUlt(f,tg);if(!fu)cast(f,tg);
  if(tg.t===16&&f.t!==16&&!tg.dead&&(banner!==b||bannerT>bt)&&f.gcd>=3.2&&Math.random()<.2){f.irf=time+Math.max(3,f.gcd+.6);f.irfD=0;f.irfx=fx.slice(n)}if(adv(f)&&!f.dead&&f.gcd>1.4)f.gcd=Math.max(1.4,f.gcd*(fu?.7:.85))}
 function itaIn(f,tg){if(tg.dead||f.dead||f===tg||phase!=='fight'||!f.irf||time>f.irf)return false;
  if(!f.irfD){f.irfD=1;itaEye=1;banner='ITACHI turns the ultimate back on '+BN(f.t)+'!';bannerT=1.8;shake=Math.max(shake,6)}
@@ -2439,8 +2460,9 @@ function stepGiant(e,dt){const f=e.f,g=e.tg,t=e.tm,L=(a,b,u)=>a+(b-a)*ez(u);
  if(e.d===undefined){e.d=Math.sign(g.x-f.x)||1;e.h={};e.ln=0;e.ra=0;e.fx0=f.x;e.hy=G-48*4.4}
  const d=e.d,ev=(k,at,fn)=>{if(t>=at&&!e.h[k]){e.h[k]=1;fn()}};
  if(!e.hit&&t<.3){g.arm=0;g.giant=0;g.cloud=0;g.sitU=0;g.sit=0;g.afl=0;g.hvt=0}
- if(!e.hit&&(abortFx(e,f,g)||f.rv||g.rv)){giClean(e,f,g);return false}
- if(e.hit&&phase!=='fight'){giClean(e,f,g);return false}
+ if(!e.hit&&(f.dead||(amb&&(amb.g===g||amb.g===f))||f.rv||g.rv||phase==='over'||phase==='menu')){giClean(e,f,g);return false}
+ if(e.hit&&(phase==='over'||phase==='menu')){giClean(e,f,g);return false}
+ if(g.dead){g.x=540;g.tx=540} // enemy life bar ran out? the technique still plays to the end
  if(t>=GI.END){giClean(e,f,g);f.gcd=Math.max(f.gcd,R(1,1.5));return false}
  f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.kb=0;
  const shr=t>=GI.SH;
@@ -2463,11 +2485,11 @@ function stepGiant(e,dt){const f=e.f,g=e.tg,t=e.tm,L=(a,b,u)=>a+(b-a)*ez(u);
  if(t>=GI.HIT&&!e.hit){e.hit=true;e.hy=G-48*g.sc;shake=28;envFlash=Math.max(envFlash,.7);
   spawn(540,e.hy,'#ff6a1a',140,13);spawn(540,e.hy,'#ffd060',70,10);spawn(540,e.hy,'#fff',24,8);spawn(540,e.hy,'#b3121a',50,8);
   fixed(f,g,g.mx*.15);banner='MagmaHolic burns THROUGH the belly! MAGMA DRIPS!';bannerT=2.2;logS='MagmaHolic · BELLY BREAKER!!';logT=2.6}
- if(e.hit&&t<GI.SH+.3&&!g.dead){const hy=G-48*g.sc;
+ if(e.hit&&t<GI.SH+.3){const hy=G-48*g.sc;
   for(let i=0;i<2;i++)parts.push({x:540+R(-28,28),y:hy+R(0,30),vx:R(-.4,.4),vy:R(.5,2),g:.3,l:R(.9,1.6),c:Math.random()<.5?'#ff6a1a':'#ffc040',r:R(2,5)});
   e.ln-=dt;if(e.ln<=0){e.ln=.45;lavaPools.push({x:540+R(-70,70),y:G+R(14,60),rx:R(16,30),t0:time,life:5,f})}}
  for(let k=0;k<6;k++)ev('m'+k,2.5+k*.45,()=>{if(fixed(f,g,g.mx*.02,true)){txt(g.x+R(-30,30),G-250,Math.round(g.mx*.02),'#ff8a2a');spawn(540+R(-30,30),G-48*g.sc+R(0,40),'#ff6a1a',10,5)}});
- ev('hl',GI.SH,()=>{if(!g.dead&&e.hit){g.hole=true;g.burn=Math.max(g.burn,2);g.bt=.3;g.burnBy=f}});
+ ev('hl',GI.SH,()=>{if(e.hit){g.hole=true;if(!g.dead){g.burn=Math.max(g.burn,2);g.bt=.3;g.burnBy=f}}});
  return true}
 function drawGiant(e){if(e.d===undefined)return;const f=e.f,g=e.tg,t=e.tm,s=g.sc;ctx.save();ctx.lineCap='round';
  if(e.ra>0){const p=Math.min(1,e.ra);
@@ -3572,28 +3594,41 @@ function sonyaHair(f){const w=Math.sin(time*5)*4;ctx.save();ctx.fillStyle='#3b2a
 function castSon(f,tg,r){f.anim=.4;const ok=FR(tg);
  if(ok&&!f.wbat&&!fx.some(q=>q.k=='Sg'&&q.f===f)&&Math.random()<.18){f.gcd=9;f.anim=.4;logS='Sonya · GIANT EYE LASER!';logT=2.6;banner='Sonya GROWS GIANT!';bannerT=1.8;fx.push({k:'Sg',f,tg,tm:0});return}
  if(ok&&!f.wbat&&Math.random()<.3){f.gcd=9;f.anim=.4;logS='Sonya · LEAP & BAT!';logT=2.4;banner='Sonya LEAPS forward!';bannerT=1.6;fx.push({k:'Lp',f,tg,tm:0});return}let m=r<.4?0:r<.62?1:2;if(m<2&&!ok)m=2;
- if(m==0){f.gcd=3.4;f.so={tm:0,n:0};logS='Sonya · SALTO COMBO!';logT=2;banner='Sonya flips forward... 8 strikes!';bannerT=1.6}
+ if(m==0){f.gcd=3.4;f.so={tm:0,n:0};logS='Sonya · SALTO COMBO!';logT=2;banner='Sonya flips forward... punch & kick x4, then an ELBOW!';bannerT=1.6}
  else if(m==1){f.gcd=7.4;f.anim=.5;logS='Sonya · BAMBOO AMBUSH!';logT=2.6;banner='Sonya summons a BAMBOO FOREST!';bannerT=2;fx.push({k:'Sb',f,tg,tm:0})}
  else{f.gcd=R(.9,1.3);logS='Sonya · Combat Knives!';logT=1.6;for(let k=0;k<2;k++)sched(k*.16,()=>{const[a,b]=hand(f);projs.push({x:a,y:b+R(-8,8),f,tg,dmg:9,col:'#cfd8e2',t:17,sh:'knife',blood:1,nm:'Knife',a:0,sp:780})})}}
 
-// ---- Sonya technique 1: forward salto, then 8 punches & kicks ----
+// ---- Sonya technique 1: forward salto, 4 punches & kicks, back to the enemy, ELBOW (slow motion), enemy THROWN ----
 function sonMeleeStep(f,i,dt){const w=f.so,en=D[1-i],c=x=>Math.max(60,Math.min(1020,x));
  const end=()=>{f.so=null;f.cfx=null;f.rise=0;f.flp=0;f.ff=0};
  if(f.dead||en.dead||f.rv||f.fly||f.split>0||phase!=='fight'||(amb&&amb.pause)||fx.some(q=>q.k=='J'&&q.tg===f)){end();return}
  w.tm+=dt;const t=w.tm;
  if(w.d===undefined){w.d=Math.sign(en.x-f.x)||f.face||1;w.x0=f.x}
- const d=w.d,tx=c(en.x-d*88);w.tx=tx;f.ff=d;f.gcd=Math.max(f.gcd,.5);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;
+ const d=w.d,tx=c(en.x-d*88);w.tx=tx;f.ff=w.bk?-d:d;f.gcd=Math.max(f.gcd,.5);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;
  if(t<.25){f.anim=Math.max(f.anim,.2);f.cfx=f.x}
  else if(t<1.05){const u=(t-.25)/.8,v=ez(u);f.x=w.x0+(tx-w.x0)*v;f.tx=f.x;f.cfx=f.x;f.rise=140*Math.sin(Math.PI*u);f.flp=6.2832*v;
   if(Math.random()<.5)parts.push({x:f.x+R(-20,20),y:G-90-f.rise+R(-40,40),vx:R(-1,1),vy:R(-1,1),l:.35,c:'#16c4b0',r:R(2,4)})}
  else{f.rise=0;f.flp=0;f.cfx=tx;
   if(!w.l){w.l=1;spawn(f.x,G,'#ddd',16,5);shake=Math.max(shake,5)}
-  while(w.n<8&&t>=1.05+w.n*.2){const k=w.n++,kick=k%2==1,last=k==7,imn=imm(en);f.anim=.3;dealt(f,en,last?15:kick?8:7,kick?'Kick':'Punch');
-   if(!imn&&!en.dead){spawn(en.x-d*18,G-(kick?70:95),'#7dfff0',9,6);spawn(en.x-d*18,G-85,'#fff',4,4);if(last){en.kb=d*420;en.down=Math.max(en.down,1);shake=Math.max(shake,7);maybeLaunch(f,en)}}}
-  if(t>=3.0)end()}}
+  while(w.n<4&&t>=1.05+w.n*.2){const k=w.n++,kick=k%2==1,last=k==3,imn=imm(en);f.anim=.3;dealt(f,en,kick?9:8,kick?'Kick':'Punch');
+   if(!imn&&!en.dead){spawn(en.x-d*18,G-(kick?70:95),'#7dfff0',9,6);spawn(en.x-d*18,G-85,'#fff',4,4);if(last)shake=Math.max(shake,6)}}
+  // finale: she stands with her BACK to the enemy, backward ELBOW in SLOW MOTION, the enemy is THROWN
+  if(t>=2.0&&!w.bk){w.bk=1;f.anim=.2;banner='Sonya turns her BACK to the enemy...';bannerT=1.6;spawn(f.x,G-90,'#16c4b0',12,5)}
+  if(t>=2.6&&!w.el){w.el=1;f.anim=.4;const imn=imm(en);dealt(f,en,26,'Elbow',true);
+   if(!imn&&!en.dead){slowT=1.7;shake=Math.max(shake,14);envFlash=Math.max(envFlash,.35);spawn(en.x-d*18,G-85,'#7dfff0',26,8);spawn(en.x-d*18,G-85,'#fff',14,6);
+    if(maybeLaunch(f,en,true)){banner='ELBOW! SLOW MOTION... the enemy is THROWN!';bannerT=2.4;logS='Sonya · ELBOW THROW!';logT=2.4}else{banner='ELBOW!';bannerT=1.4}}}
+  if((t>=4&&!fx.some(q=>q.k=='J'&&q.tg===en))||t>=7)end()}}
 function drawSonMelee(d){const w=d.so;if(w.d===undefined||w.tm<.25)return;const s=d.sc,f=d.face,en=D[1-D.indexOf(d)];
  if(w.tm<1.05){for(let j=1;j<=3;j++){const u=(w.tm-.25)/.8-.09*j;if(u<=0)continue;const v=ez(u);ghostP(d,w.x0+((w.tx===undefined?w.x0:w.tx)-w.x0)*v,f,.28-.07*j,0,{rise:140*Math.sin(Math.PI*u),flp:6.2832*v})}return}
- let p=0,n=0;for(let k=0;k<8;k++){const q=1-Math.abs(w.tm-(1.05+k*.2)+.04)/.1;if(q>p){p=q;n=k}}
+ if(w.bk&&w.tm>=2.15){const q=w.tm<2.6?Math.min(1,(w.tm-2.15)/.45):Math.max(0,1-(w.tm-2.6)/.7);
+  if(q>.03){const base=d.y+(d.jy||0)-(d.rise||0),sx=d.x,sy=base-62*s,ex=sx-f*(8+42*q)*s,ey=sy+(6-14*q)*s;
+   ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+   if(w.tm>=2.6){ctx.globalAlpha=.6*q;ctx.strokeStyle='#7dfff0';ctx.shadowColor='#16c4b0';ctx.shadowBlur=14;ctx.lineWidth=12;ctx.beginPath();ctx.moveTo(sx+f*10*s,sy-4*s);ctx.lineTo(ex,ey);ctx.stroke();ctx.shadowBlur=0}
+   ctx.globalAlpha=1;ctx.strokeStyle='#f2cfa5';ctx.lineWidth=7*s;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.lineTo(ex+f*6*s,ey-17*s);ctx.stroke();
+   ctx.fillStyle='#f2cfa5';ctx.beginPath();ctx.arc(ex,ey,6.5*s,0,7);ctx.fill();
+   if(w.tm>=2.6&&w.tm<3.3){const u=(w.tm-2.6)/.7;ctx.globalAlpha=1-u;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.arc(ex-f*6*s,ey,12+46*u,0,7);ctx.stroke()}
+   ctx.restore()}return}
+ let p=0,n=0;for(let k=0;k<4;k++){const q=1-Math.abs(w.tm-(1.05+k*.2)+.04)/.1;if(q>p){p=q;n=k}}
  if(p<=.05)return;const base=d.y+(d.jy||0)-(d.rise||0),kick=n%2==1;ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
  if(!kick){const hx=d.x+f*10*s,hy=base-66*s,ex=hx+f*66*s*p,ey=hy+(n%4==0?3:-4)*s*p;
   ctx.globalAlpha=.55*p;ctx.strokeStyle='#7dfff0';ctx.shadowColor='#16c4b0';ctx.shadowBlur=12;ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(hx-f*30,hy+6);ctx.lineTo(ex,ey);ctx.stroke();
@@ -3665,7 +3700,7 @@ function drawOroMelee(d){const w=d.so;if(w.d===undefined||w.tm<.25)return;const 
 const OR={T1:1.45,L2:1.95,W:2.5,AIR:2.85,F0:3.05,F1:3.5,TH:3.85,END:3.85+3.1};
 function stepOro(e,dt){const f=e.f,g=e.tg,t=e.tm,c=x=>Math.max(60,Math.min(1020,x));
  const cl=()=>{f.al=undefined;f.cfx=null;f.ff=0;f.flp=0;if(!(amb&&amb.g===f))f.rise=0;g.cfx=null;g.ff=0;g.vl=undefined;g.fly=false;g.kb=0;if(!(amb&&amb.g===g))g.rise=0;e.lt=0};
- if(e.d===undefined){e.gx=g.x;e.d=Math.sign(g.x-f.x)||1;e.h={};e.x0=f.x;e.bx=c(e.gx+e.d*82);e.lt=0;e.ox=f.x;e.oy=G-70;e.tr=[];e.ta=0}
+ if(e.d===undefined){e.gx=g.x;e.d=Math.sign(g.x-f.x)||1;e.h={};e.x0=f.x;e.bx=c(e.gx+e.d*82);e.bx2=c(e.gx-e.d*82);e.lt=0;e.ox=f.x;e.oy=G-70;e.tr=[];e.ta=0}
  if(!e.th&&(abortFx(e,f,g)||f.rv||g.rv||imm(g))){cl();return false}
  if(e.th&&phase!=='fight'){cl();return false}
  if(t>=OR.END){cl();g.down=Math.max(g.down,1.2);f.gcd=Math.max(f.gcd,R(1,1.5));return false}
@@ -3693,18 +3728,19 @@ function stepOro(e,dt){const f=e.f,g=e.tg,t=e.tm,c=x=>Math.max(60,Math.min(1020,
  // 6) light floats in front of the enemy
  else if(t<OR.TH){const u=Math.max(0,Math.min(1,(t-OR.F0)/(OR.F1-OR.F0))),v=ez(u),hov=90+5*Math.sin(time*9);
   g.ff=d;
-  if(t<OR.F1){f.al=0;e.lt=1;setX(e.bx);const y=G-190+(G-70-hov-(G-190))*v;orb(e.bx,y)}
-  else{ev('fl',OR.F1,()=>{banner='Orochi FLOATS in front of the enemy!';bannerT=1.5;spawn(e.bx,G-70-hov,'#bfe0ff',22,7);spawn(e.bx,G-70-hov,'#fff',8,5);shake=Math.max(shake,4)});
-   setX(e.bx);f.rise=hov;f.al=Math.min(1,(t-OR.F1)/.2);e.lt=Math.max(0,1-(t-OR.F1)/.2);f.ff=-d;f.anim=Math.max(f.anim,.1);
+  ev('air2',OR.F0+.25,()=>{g.anim=.5;txt(g.x+d*50,G-120,'MISS','#cde');spawn(g.x+d*58,G-85,'#fff',10,6);banner='He punches again... only AIR!';bannerT=1.4});
+  if(t<OR.F1){f.al=0;const x=e.bx+(e.bx2-e.bx)*v,y=G-190+(G-70-hov-(G-190))*v-60*Math.sin(Math.PI*v);e.lt=1;setX(x);orb(x,y)}
+  else{ev('fl',OR.F1,()=>{banner='Orochi FLOATS behind the enemy!';bannerT=1.5;spawn(e.bx2,G-70-hov,'#bfe0ff',22,7);spawn(e.bx2,G-70-hov,'#fff',8,5);shake=Math.max(shake,4)});
+   setX(e.bx2);f.rise=hov;f.al=Math.min(1,(t-OR.F1)/.2);e.lt=Math.max(0,1-(t-OR.F1)/.2);f.ff=d;f.anim=Math.max(f.anim,.1);
    if(Math.random()<.5)parts.push({x:f.x+R(-18,18),y:G-60-f.rise+R(-30,30),vx:R(-.5,.5),vy:R(-2,0),l:.45,c:'#bfe0ff',r:R(2,3.5)})}}
  // 7) the big punch, enemy thrown far & bleeding
  else{
-  if(!e.th){e.th=1;const td=-d,wall=td>0?1030:50,Dd=Math.abs(wall-e.gx);
+  if(!e.th){e.th=1;const td=d,wall=td>0?1030:50,Dd=Math.abs(wall-e.gx);
    e.P=[[0,e.gx,60],[.45,e.gx+td*Dd*.4,335],[.95,e.gx+td*Dd*.75,0],[1.3,wall,170],[1.7,wall-td*120,0],[2.05,wall-td*170,60],[2.4,wall-td*190,0]];
-   e.h0r=f.rise||0;f.anim=.5;f.al=1;e.lt=0;banner='Orochi PUNCHES... the enemy is thrown FAR!';bannerT=1.8;shake=Math.max(shake,16);envFlash=Math.max(envFlash,.4);
+   e.h0r=f.rise||0;f.anim=.5;f.al=1;e.lt=0;banner='Orochi KICKS... the enemy is thrown FAR!';bannerT=1.8;shake=Math.max(shake,16);envFlash=Math.max(envFlash,.4);
    if(fixed(f,g,14,true))txt(g.x,G-170,14,'#ff5a4a');spawn(e.gx,G-130,'#fff',30,8);spawn(e.gx,G-120,'#b3121a',24,8)}
   const u=t-OR.TH,pp=mbPath(e.P,Math.min(u,2.4)),by=G-90-pp[1];
-  setX(e.bx);f.ff=-d;f.rise=e.h0r*(1-ez(u/.55));
+  setX(e.bx2);f.ff=d;f.rise=e.h0r*(1-ez(u/.55));
   g.x=pp[0];g.cfx=pp[0];g.rise=pp[1];g.fly=u<2.4;g.down=0;g.kb=0;g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.ff=0;
   if(u<2.4&&!g.dead){g.drip=Math.max(g.drip||0,.5);if(Math.random()<.9)parts.push({x:g.x+R(-14,14),y:by+R(-30,30),vx:R(-2,2),vy:R(-1,2),l:.6,c:'#b3121a',r:R(2,4)})}
   const hit=(dm,big,sx)=>{const x=sx===undefined?g.x:sx;if(fixed(f,g,dm,true))txt(g.x+R(-20,20),Math.max(40,by-70),dm,'#ff5a4a');spawn(x,by,'#b3121a',big?90:40,big?10:8);spawn(x,by,'#fff6c8',12,7);shake=Math.max(shake,big?22:14);envFlash=Math.max(envFlash,big?.5:.2)};
@@ -3715,6 +3751,7 @@ function stepOro(e,dt){const f=e.f,g=e.tg,t=e.tm,c=x=>Math.max(60,Math.min(1020,
    if(!g.dead&&!imm(g)){g.bleed=6;g.bld=.1;g.bleedBy=f;g.down=Math.max(g.down,1.6);g.fly=false;banner='The enemy lies broken on the ground... BLEEDING!';bannerT=1.8}})}
  return true}
 function drawOro(e){if(e.d===undefined)return;const t=e.tm;
+ if(t>=OR.TH-.08&&t<OR.TH+.3){const f=e.f,p=Math.sin(Math.PI*Math.min(1,(t-OR.TH+.08)/.38)),s=f.sc,d=e.d,hx=f.x+d*6*s,hy=f.y-(f.rise||0)-28*s,L=80*s,fx2=hx+d*L*p,fy2=hy-6*s*p;ctx.save();ctx.lineCap='round';ctx.globalAlpha=.6*p;ctx.strokeStyle='#bfe0ff';ctx.shadowColor='#4aa0ff';ctx.shadowBlur=14;ctx.lineWidth=11;ctx.beginPath();ctx.moveTo(hx-d*34,hy+14);ctx.lineTo(fx2,fy2);ctx.stroke();ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.strokeStyle='#1f55c8';ctx.lineWidth=8*s;ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(fx2,fy2);ctx.stroke();ctx.fillStyle='#0a1840';ctx.beginPath();ctx.ellipse(fx2+d*4*s,fy2,10*s,5.5*s,0,0,7);ctx.fill();ctx.restore()}
  ctx.save();ctx.globalCompositeOperation='lighter';
  e.tr.forEach(q=>{const a=.5*q.l/.35;if(a<=.02)return;const r=ctx.createRadialGradient(q.x,q.y,1,q.x,q.y,26);r.addColorStop(0,'rgba(220,240,255,'+a+')');r.addColorStop(1,'rgba(80,160,255,0)');ctx.fillStyle=r;ctx.beginPath();ctx.arc(q.x,q.y,26,0,7);ctx.fill()});
  if(e.lt>.02){const R0=14+34*e.lt,a=Math.min(1,e.lt*1.2),x=e.ox,y=e.oy,r=ctx.createRadialGradient(x,y,2,x,y,R0*2.2);r.addColorStop(0,'rgba(255,255,255,'+a+')');r.addColorStop(.35,'rgba(170,215,255,'+(.8*a)+')');r.addColorStop(1,'rgba(60,140,255,0)');ctx.fillStyle=r;ctx.beginPath();ctx.arc(x,y,R0*2.2,0,7);ctx.fill();
@@ -3832,7 +3869,12 @@ function drawLeap(e){const f=e.f,t=e.tm;ctx.save();
   ['HA!','HA!','HA HA!','HA HA HA!!'].forEach((s,i)=>{if(k<i*.5)return;const age=k-i*.5,sc=1+.35*Math.max(0,1-age*6);ctx.save();ctx.globalAlpha=fa;ctx.translate(bx+(i%2?40:-40),by-i*34-age*6);ctx.rotate(Math.sin(time*9+i)*.12);ctx.scale(sc,sc);ctx.strokeStyle='#2a0a24';ctx.strokeText(s,0,0);ctx.fillStyle='#ff7ad9';ctx.fillText(s,0,0);ctx.restore()})}
  ctx.restore()}
 
-function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop)}
+var slowT=0,slowK=1;
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;
+ if(slowT>0){slowT-=dt;slowK+=(.25-slowK)*Math.min(1,dt*14)}else slowK+=(1-slowK)*Math.min(1,dt*6);
+ update(dt*slowK);draw();
+ if(slowK<.95){const a=(1-slowK)/.75;ctx.save();ctx.fillStyle='rgba(60,255,230,'+(.07*a)+')';ctx.fillRect(0,0,W,H);ctx.fillStyle='#000';ctx.fillRect(0,0,W,30*a);ctx.fillRect(0,H-30*a,W,30*a);ctx.restore()}
+ requestAnimationFrame(loop)}
 function restart(){redT=0;sprays=[];lavaPools=[];dark=0;craters=[];stains=[];nails=[];holes=[];heads=[];shake=0;tombs=[];timers=[];texts=[];parts=[];rescue=null;bannerT=0;init();phase='menu';envI=-1;menuSel=[];menuHover=-1}
 init();phase='menu';envI=-1;requestAnimationFrame(loop);
 
