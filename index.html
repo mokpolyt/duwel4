@@ -9,7 +9,7 @@ body{display:flex;align-items:center;justify-content:center;overflow:hidden}
 canvas{width:min(100vw,200vh);aspect-ratio:2/1;display:block;max-height:100%}
 </style></head><body>
 <canvas id="c" width="1620" height="810"></canvas>
-<script>
+<script>var bdUsed=false,bdAt=7;
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');ctx.scale(1.5,1.5);
 const W=1080,H=540,G=430,ADV=1.5,HP=800;
 const R=(a,b)=>a+Math.random()*(b-a);
@@ -4142,7 +4142,6 @@ function drawRkFront(e){if(e.d===undefined)return;const f=e.f,t=e.tm,S=RKT;ctx.s
 
 // ===== Naburo Bender: BALD HAIR STAB (guaranteed once per duel) =====
 // pulls off his spiky hair (bald) > leaps > kicks > stabs 10x with the hair > last stab = blood spurt in slow motion, dark background, golden light
-let bdUsed=false,bdAt=7;
 const BD={T0:.3,L0:.8,L1:1.5,K:1.55,S0:2.1,P:.2,N:10};BD.LS=BD.S0+(BD.N-1)*BD.P;BD.SL=.5;
 function bdTick(dt){
  if(bdUsed||phase!=='fight'||dur<bdAt||fx.some(qzHolds)||amb||rescue)return;
