@@ -59,7 +59,7 @@ function pace(){const lo=Math.min(D[0].hp/D[0].h0,D[1].hp/D[1].h0),s=1-dur/goal;
 const imm=g=>g.arm>0||g.giant>0||g.cloud>0||!!g.rv||(g.t===14&&(g.sit>.3||g.afl>time));
 function bl(c,k){if(c[0]!=='#'||c.length!==7)return c;const n=parseInt(c.slice(1),16),m=(v,t)=>Math.round(v+(t-v)*k);return'#'+[m(n>>16,16),m((n>>8)&255,13),m(n&255,13)].map(v=>v.toString(16).padStart(2,'0')).join('')}
 // fixed damage (ignores pace/dodge). q = quiet (no text, no knockdown)
-function fixed(f,tg,d,q){if(tg.t===16&&itaIn(f,tg)){fixed(tg,f,d,q);return false}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return false;if(imm(tg)){if(!q)txt(tg.x,G-200,'IMMUNE','#cde');return false}
+function fixed(f,tg,d,q){if(im20(f,tg))return false;if(tg.t===16&&itaIn(f,tg)){fixed(tg,f,d,q);return false}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return false;if(imm(tg)){if(!q)txt(tg.x,G-200,'IMMUNE','#cde');return false}
  tg.hp-=d;if(dur<40&&d<60)tg.hp=Math.max(tg.hp,Math.min(15,tg.h0*.3));tg.flash=.25;
  if(!q){tg.down=Math.max(tg.down,1);txt(tg.x+R(-20,20),G-200,Math.round(d),'#ff5a4a')}
  if(tg.hp<=0&&docSave(tg)){}else if(tg.hp<=0&&docSave(tg))return;if(tg.hp<=0){tg.hp=0;tg.dead=true;tg.deaths++;winner=f;phase='end';pt=0;banner=BN(f.t)+' wins!'+' '+T[tg.t].n+' is OUT FOR GOOD!';bannerT=3}
@@ -204,7 +204,8 @@ function drawAmb(){if(amb.fire){drawAmbFire(amb);if(amb.ex)return}const a=amb,t=
  ctx.save();ctx.globalCompositeOperation='lighter';const lx=a.ax+fo*(sir?-6:14),ly=G+104-100,gr=ctx.createRadialGradient(lx,ly,0,lx,ly,120);gr.addColorStop(0,sir?'rgba(255,50,50,.4)':'rgba(60,120,255,.4)');gr.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(lx,ly,120,0,7);ctx.fill();ctx.restore();
  if(t>=2.9&&t<5.3&&!a.fall){const g=a.g,c=g.x-g.face*g.sc*48;ctx.save();ctx.globalAlpha=Math.max(0,a.med[0].al);ctx.fillStyle='#d5dde2';ctx.strokeStyle='#7d858d';ctx.lineWidth=2;ctx.fillRect(c-100,G-22,200,8);ctx.strokeRect(c-100,G-22,200,8);ctx.restore()}
  a.med.forEach(m=>{if(m.al>0)person(m,false)})}
-function dealt(f,tg,base,name,nd,ex){if(tg.t===16&&itaIn(f,tg)){dealt(tg,f,base,name,true,ex);return}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return;if(imm(tg)){if(ex!==2)txt(tg.x,G-200,'IMMUNE','#cde');spawn(tg.x,G-90,'#fff',6);return}
+function im20(f,tg){const e=fx.find(q=>(q.k=='Bt'||q.k=='Sg')&&q.f===f&&q.tg===tg);if(!e)return false;if(e.im20===undefined)e.im20=Math.random()<.2;if(!e.im20)return false;if(!e.imT||time-e.imT>.6){e.imT=time;txt(tg.x,G-200,'IMMUNE','#cde');spawn(tg.x,G-90,'#fff',6)}return true}
+function dealt(f,tg,base,name,nd,ex){if(im20(f,tg))return;if(tg.t===16&&itaIn(f,tg)){dealt(tg,f,base,name,true,ex);return}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return;if(imm(tg)){if(ex!==2)txt(tg.x,G-200,'IMMUNE','#cde');spawn(tg.x,G-90,'#fff',6);return}
  if(!nd&&!ex&&!tg.zz&&Math.random()<.16){txt(tg.x,G-190*tg.ts/1.7*1.0-20,'DODGE','#cfe');if(!tg.jy&&!tg.fly)tg.jv=-560;return}
  let d=ex?base:base*(adv(f)?ADV:1)*R(.85,1.15);const big=d>=60;if(!big&&!ex)d*=pace();tg.hp-=d;
  if(dur<40&&!big)tg.hp=Math.max(tg.hp,Math.min(15,tg.h0*.3));
