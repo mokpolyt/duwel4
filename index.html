@@ -3544,7 +3544,7 @@ const ULTS={
  (f,t)=>FR(t)&&!f.wbat&&!f.waxe&&(f.qzN||0)<1&&ultP(f,t,12,'Woman Bender · MOOD QUIZ!','',{k:'Qz'},0),
  (f,t)=>FR(t)&&ultP(f,t,6,'Woman Bender · KICK STORM!','',{k:'K'}),
  (f,t)=>FR(t)&&ultP(f,t,7,'Woman Bender · TWIN UMBRELLAS!','',{k:'Um'})],
-11:[(f,t)=>FR(t)&&!f.bald&&ultP(f,t,5.5,'Naburo Bender · BALD HAIR STAB!','Naburo Bender pulls off his spiky hair...',{k:'Bd'}),
+11:[(f,t)=>FR(t)&&!f.bald&&ultP(f,t,5.5,'Naburo Bender · CROWN HAIR STAB!','Naburo Bender steps back slowly...',{k:'Bd'}),
  (f,t)=>!imm(t)&&ultP(f,t,4.2,'Naburo Bender · GIANT SPINNING SHURIKEN!','Naburo Bender throws a HUGE SPINNING SHURIKEN!',{k:'H',done:false}),
  (f,t)=>{if(!FR(t))return false;startCloneRush(f);logS='Naburo Bender · 2 CLONE RUSH! (FAVOURED)';return true},
  (f,t)=>{if(!FR(t))return false;f.gcd=3.2;f.fm={tm:0,n:0};logS='Naburo Bender · FORWARD KICK & PUNCH! (FAVOURED)';logT=2.6;banner='Naburo Bender rushes in to PUNCH & KICK!';bannerT=1.6;return true}],
@@ -4140,9 +4140,10 @@ function drawRkFront(e){if(e.d===undefined)return;const f=e.f,t=e.tm,S=RKT;ctx.s
  if(e.imp&&time-e.imp.t0<.25){const p=1-(time-e.imp.t0)/.25,r=(e.imp.big?70:40)*(1.3-p*.5),gr=ctx.createRadialGradient(e.imp.x,e.imp.y,0,e.imp.x,e.imp.y,r);ctx.globalCompositeOperation='lighter';gr.addColorStop(0,'rgba(255,240,190,'+p+')');gr.addColorStop(.5,'rgba(255,120,30,'+(.6*p)+')');gr.addColorStop(1,'rgba(255,60,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(e.imp.x,e.imp.y,r,0,7);ctx.fill()}
  ctx.restore()}
 
-// ===== Naburo Bender: BALD HAIR STAB (guaranteed once per duel) =====
-// pulls off his spiky hair (bald) > leaps > kicks > stabs 10x with the hair > last stab = blood spurt in slow motion, dark background, golden light
-const BD={T0:.3,L0:.8,L1:1.5,K:1.55,S0:2.1,P:.2,N:10};BD.LS=BD.S0+(BD.N-1)*BD.P;BD.SL=.5;
+// ===== Naburo Bender: CROWN HAIR STAB (guaranteed once per duel) =====
+// walks slowly backward > slowly takes off crown-like hair (bald) > leaps > 10x (kick + stab with crown) > last stab: blood spurt, slow motion
+// whole background dark, light from top corner on both fighters
+const BD={W1:1.4,P0:1.5,P1:3.0,L0:3.2,L1:3.8,S0:3.9,P:.36,N:10,KO:0,SO:.18,SL:.5};
 function bdTick(dt){
  if(bdUsed||phase!=='fight'||dur<bdAt||fx.some(qzHolds)||amb||rescue)return;
  const f=D.find(x=>x.t===11&&!x.dead);if(!f)return;
@@ -4150,53 +4151,62 @@ function bdTick(dt){
  const free=FR(en)&&!f.fm&&!f.kk&&!f.sw&&!f.tn&&!f.dk&&!f.sm&&!f.so&&!f.itm&&!f.fly&&!f.jy&&f.down<1&&!f.rise&&f.cfx==null&&!f.split&&!f.rv&&!fx.some(q=>q.k!=='MT'&&(q.f===f||q.tg===f||q.f===en||q.tg===en));
  if(!free&&dur<bdAt+10)return;
  bdUsed=true;f.gcd=Math.max(f.gcd,1.5);fx.push({k:'Bd',f,tg:en,tm:0,guar:1});
- logS='Naburo Bender · BALD HAIR STAB!';logT=2.4;banner='Naburo Bender pulls off his spiky hair...';bannerT=1.8}
+ logS='Naburo Bender · CROWN HAIR STAB!';logT=2.4;banner='Naburo Bender steps back slowly...';bannerT=1.8}
 function stepBald(e,dt){const f=e.f,g=e.tg,t=e.tm,c=x=>Math.max(60,Math.min(1020,x));
- if(e.d===undefined){e.d=Math.sign(g.x-f.x)||f.face||1;e.x0=f.x;e.gx=g.x;e.tx=c(g.x-e.d*88);e.h={};e.dkv=0}
+ if(e.d===undefined){e.d=Math.sign(g.x-f.x)||f.face||1;e.x0=f.x;e.gx=g.x;e.bx=c(f.x-e.d*110);e.tx=c(g.x-e.d*88);e.h={};e.dkv=0}
  const d=e.d,ev=(k,at,fn)=>{if(t>=at&&!e.h[k]){e.h[k]=1;fn()}};
  const clean=()=>{f.cfx=null;f.ff=0;if(!(amb&&amb.g===f))f.rise=0;g.cfx=null;g.kb=0};
  if(!e.fin&&(abortFx(e,f,g)||f.rv||g.rv||imm(g))){f.bald=0;clean();if(e.guar&&phase==='fight'&&!f.dead&&!g.dead){bdUsed=false;bdAt=dur+3}return false}
  if(e.fin!==undefined&&t>=e.fin+BD.SL){f.bald=0;clean();spawn(f.x,f.y-90*f.sc,'#ffd84a',30,6);if(!g.dead)g.down=Math.max(g.down,1.2);f.gcd=Math.max(f.gcd,R(1,1.4));return false}
  f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.kb=0;f.ff=d;
- if(t>=.4){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;if(g.so){g.so=null;g.flp=0;g.rise=0};g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0;g.fly=false;g.down=0;g.cfx=e.gx}
- // movement
- if(t<BD.L0){f.cfx=e.x0;if(t<.7)f.anim=Math.max(f.anim,.2)}
- else if(t<BD.L1){const u=(t-BD.L0)/(BD.L1-BD.L0),x=e.x0+(e.tx-e.x0)*ez(u);f.x=x;f.tx=x;f.cfx=x;f.rise=125*Math.sin(Math.PI*u);
+ if(t>=.1){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;if(g.so){g.so=null;g.flp=0;g.rise=0};g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0;g.fly=false;g.down=0;g.cfx=e.gx}
+ // movement: slow walk backward, stand, leap, fight at the enemy
+ if(t<BD.W1){const x=e.x0+(e.bx-e.x0)*ez(t/BD.W1);f.x=x;f.tx=x;f.cfx=x;f.rise=0}
+ else if(t<BD.L0){f.cfx=e.bx;f.x=e.bx;f.tx=e.bx}
+ else if(t<BD.L1){const u=(t-BD.L0)/(BD.L1-BD.L0),x=e.bx+(e.tx-e.bx)*ez(u);f.x=x;f.tx=x;f.cfx=x;f.rise=125*Math.sin(Math.PI*u);
   if(Math.random()<.6)parts.push({x:x+R(-16,16),y:G-90-f.rise+R(-40,40),vx:R(-1,1),vy:R(-1,1),l:.35,c:'#ffb040',r:R(2,4)})}
  else{f.rise=0;f.cfx=e.tx}
- ev('pull',BD.T0,()=>{f.bald=1;f.anim=.4;banner='Naburo Bender pulls off his spiky hair... BALD!';bannerT=1.8;shake=Math.max(shake,6);const hy=f.y-90*f.sc;spawn(f.x,hy,'#ffd84a',36,7);spawn(f.x,hy,'#fff6c8',14,6)});
+ ev('pull',BD.P0,()=>{f.bald=1;banner='He slowly takes off his crown hair... BALD!';bannerT=2;shake=Math.max(shake,3);const hy=f.y-90*f.sc;spawn(f.x,hy,'#ffd84a',24,5);spawn(f.x,hy,'#fff6c8',10,4)});
  ev('leap',BD.L0,()=>{banner='He LEAPS forward!';bannerT=1.2});
- ev('land',BD.L1,()=>{spawn(f.x,G,'#ddd',16,5);shake=Math.max(shake,5)});
- ev('kick',BD.K,()=>{f.anim=.4;dealt(f,g,14,'Kick',true);if(!imm(g)&&!g.dead){spawn(g.x-d*18,G-70,'#ff9a2a',12,7);spawn(g.x-d*18,G-70,'#fff',6,5);shake=Math.max(shake,8)}});
- ev('st',BD.S0-.1,()=>{banner='...and STABS with his own hair!';bannerT=1.6});
- for(let k=0;k<BD.N;k++)ev('s'+k,BD.S0+k*BD.P+.05,()=>{const last=k==BD.N-1,px=g.x-d*6,py=G-92+R(-22,22);f.anim=.3;
-  if(!last){dealt(f,g,6,'Hair Stab',true);if(!imm(g)){spawn(px,py,'#ffe14a',8,6);spawn(px,py,'#fff',4,5);spawn(px,py,'#b3121a',8,6);shake=Math.max(shake,4);if(k%3==0)splat(g.x,false,10)}}
-  else{e.fin=t;e.P=[px,G-92];slowT=2;shake=Math.max(shake,28);banner='THE LAST STAB... BLOOD SPURTS!';bannerT=2.2;
-   if(fixed(f,g,22,true)){txt(g.x+R(-20,20),G-200,22,'#ff5a4a');g.bleed=7;g.bld=.1;g.bleedBy=f;g.drip=Math.max(g.drip||0,10);splat(g.x,true,14);splat(g.x+R(-110,110),true,14);splat(g.x+R(-160,160),true,14);redT=Math.max(redT,10);
-    e.dr=Array.from({length:110},(_,i)=>{const th=R(-1.35,.35),sp=R(150,520),big=i<14;return{vx:d*Math.cos(th)*sp*(Math.random()<.2?-.5:1),vy:Math.sin(th)*sp-80,s:R(0,.7),w:big?R(4,6.5):R(1.8,3.6),c:Math.random()<.5?'#c0141c':'#8f0e14'}})}}});
- e.dkv=e.fin===undefined?0:Math.min(1,(t-e.fin)/.08)*(1-ez((t-(e.fin+BD.SL-.14))/.14));
+ ev('land',BD.L1,()=>{spawn(f.x,G,'#ddd',16,5);shake=Math.max(shake,5);banner='Stab and kick!';bannerT=1.5});
+ for(let k=0;k<BD.N;k++){const T=BD.S0+k*BD.P,last=k==BD.N-1;
+  ev('k'+k,T+BD.KO,()=>{f.anim=.4;dealt(f,g,3,'Kick',true);if(!imm(g)&&!g.dead){spawn(g.x-d*18,G-70,'#ff9a2a',6,6);shake=Math.max(shake,3)}});
+  ev('s'+k,T+BD.SO,()=>{const px=g.x-d*6,py=G-92+R(-22,22);f.anim=.3;
+   if(!last){dealt(f,g,4,'Crown Stab',true);if(!imm(g)){spawn(px,py,'#ffe14a',8,6);spawn(px,py,'#fff',4,5);spawn(px,py,'#b3121a',8,6);shake=Math.max(shake,4);if(k%3==0)splat(g.x,false,10)}}
+   else{e.fin=t;e.P=[px,G-92];slowT=2;shake=Math.max(shake,28);banner='THE LAST STAB... BLOOD SPURTS!';bannerT=2.2;
+    if(fixed(f,g,22,true)){txt(g.x+R(-20,20),G-200,22,'#ff5a4a');g.bleed=7;g.bld=.1;g.bleedBy=f;g.drip=Math.max(g.drip||0,10);splat(g.x,true,14);splat(g.x+R(-110,110),true,14);splat(g.x+R(-160,160),true,14);redT=Math.max(redT,10)}
+     {e.dr=Array.from({length:110},(_,i)=>{const th=R(-1.35,.35),sp=R(150,520),big=i<14;return{vx:d*Math.cos(th)*sp*(Math.random()<.2?-.5:1),vy:Math.sin(th)*sp-80,s:R(0,.7),w:big?R(4,6.5):R(1.8,3.6),c:Math.random()<.5?'#c0141c':'#8f0e14'}})}}})}
+ // background darkness: ramps in during the slow walk, stays, lifts at the very end
+ const endT=e.fin===undefined?1e9:e.fin+BD.SL;
+ e.dkv=Math.min(1,t/.9)*(1-ez((t-(endT-.14))/.14));
  return true}
-function drawBaldBack(e){if(!(e.dkv>0))return;ctx.save();ctx.fillStyle='rgba(0,0,0,'+(.66*e.dkv)+')';ctx.fillRect(-40,-40,W+80,H+80);ctx.restore()}
-function drawBald(e){if(e.d===undefined)return;const f=e.f,g=e.tg,t=e.tm,d=e.d,s=f.sc,k=s/1.7,S=BD;ctx.save();
- // kick
- if(t>=S.K-.05&&t<S.K+.4){const p=Math.sin(Math.PI*Math.min(1,(t-S.K+.05)/.45));if(p>.02)kickOv(f.x,d,s,p,'#ff8a1a')}
- // the pulled-off hair, used as a spear
- if(f.bald&&t>=S.T0){const hd=[f.x,f.y-90*s],[h0,h1]=hand(f),hx=h0,hy=h1-(f.rise||0),q=ez((t-S.T0)/.4),x=hd[0]+(hx-hd[0])*q,y=hd[1]+(hy-hd[1])*q;
-  let ext=0;if(e.fin!==undefined)ext=1;else if(t>=S.S0-.05&&t<S.LS+.3){const u=((t-(S.S0-.05))/S.P)%1;ext=Math.sin(Math.PI*u)}
-  const holdA=-1.1-(1-q)*.5,aim=Math.atan2(G-92-y,(g.x-x)*d),m=ez((t-S.L1)/.4),a=holdA+(aim-holdA)*m;
-  ctx.save();ctx.translate(x+d*ext*34*k,y);ctx.scale(d,1);ctx.rotate(a);ctx.scale(k,k);ctx.shadowColor='#ffd21a';ctx.shadowBlur=16;ctx.lineJoin='round';
-  ctx.fillStyle='#ffd84a';ctx.strokeStyle='#b07400';ctx.lineWidth=2;ctx.beginPath();
-  ctx.moveTo(-14,-9);ctx.lineTo(-32,-24);ctx.lineTo(-23,-5);ctx.lineTo(-40,-7);ctx.lineTo(-25,4);ctx.lineTo(-37,15);ctx.lineTo(-14,9);ctx.lineTo(54,6);ctx.lineTo(92,0);ctx.lineTo(54,-6);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.shadowBlur=0;ctx.strokeStyle='#fff6c0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-6,-3);ctx.lineTo(80,0);ctx.stroke();ctx.restore()}
+function drawBaldBack(e){if(!(e.dkv>0))return;ctx.save();ctx.fillStyle='rgba(0,0,0,'+(.7*e.dkv)+')';ctx.fillRect(-40,-40,W+80,H+80);ctx.restore()}
+function drawBald(e){if(e.d===undefined)return;const f=e.f,g=e.tg,t=e.tm,d=e.d,s=f.sc,k=s/1.7,S=BD,a=e.dkv;ctx.save();
+ // light from the top corner, shining on both fighters
+ if(a>0){const lx=d>0?-30:W+30,ly=-30,mx=(f.x+g.x)/2,my=G-80,ang=Math.atan2(my-ly,mx-lx),sp=.2;ctx.save();ctx.globalCompositeOperation='lighter';
+  const L=Math.hypot(mx-lx,my-ly)+260,gr=ctx.createLinearGradient(lx,ly,lx+Math.cos(ang)*L,ly+Math.sin(ang)*L);gr.addColorStop(0,'rgba(255,230,120,'+(.5*a)+')');gr.addColorStop(1,'rgba(255,200,60,'+(.1*a)+')');
+  ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(lx+Math.cos(ang-sp)*L*1.2,ly+Math.sin(ang-sp)*L*1.2);ctx.lineTo(lx+Math.cos(ang+sp)*L*1.2,ly+Math.sin(ang+sp)*L*1.2);ctx.closePath();ctx.fill();
+  const rg=ctx.createRadialGradient(lx,ly,0,lx,ly,200);rg.addColorStop(0,'rgba(255,245,170,'+(.8*a)+')');rg.addColorStop(1,'rgba(255,220,80,0)');ctx.fillStyle=rg;ctx.beginPath();ctx.arc(lx,ly,200,0,7);ctx.fill();
+  
+  ctx.restore()}
+ // kicks (one per round)
+ for(let i=0;i<S.N;i++){const u=(t-(S.S0+i*S.P+S.KO))/.22;if(u>0&&u<1)kickOv(f.x,d,s,Math.sin(Math.PI*u),'#ff8a1a')}
+ // the crown hair: lifted slowly off the head, then used as a spiked weapon
+ if(f.bald&&t>=S.P0){const hd=[f.x,f.y-90*s],[h0,h1]=hand(f),hx=h0,hy=h1-(f.rise||0),q=Math.min(1,(t-S.P0)/(S.P1-S.P0));
+  const up=[hd[0],hd[1]-48*k],x=q<.5?hd[0]:up[0]+(hx-up[0])*ez((q-.5)*2),y=q<.5?hd[1]+(up[1]-hd[1])*ez(q*2):up[1]+(hy-up[1])*ez((q-.5)*2);
+  let ext=0;for(let i=0;i<S.N;i++){const u=(t-(S.S0+i*S.P+S.SO))/.16;if(u>0&&u<1)ext=Math.max(ext,Math.sin(Math.PI*u))}if(e.fin!==undefined)ext=1;
+  const aim=Math.atan2(G-92-y,(g.x-x)*d),m=ez((t-S.L0)/.5),a2=-1.57+(aim+1.57)*m;
+  ctx.save();ctx.translate(x+d*ext*40*k,y);ctx.scale(d,1);ctx.rotate(a2);ctx.scale(k,k);ctx.shadowColor='#ffd21a';ctx.shadowBlur=16;ctx.lineJoin='round';
+  ctx.fillStyle='#ffd84a';ctx.strokeStyle='#b07400';ctx.lineWidth=2;
+  ctx.beginPath();ctx.rect(-14,-26,16,52);ctx.fill();ctx.stroke();
+  for(let i=0;i<5;i++){const yy=-22+i*11,len=i%2?34:48;ctx.beginPath();ctx.moveTo(2,yy-6);ctx.lineTo(2+len,yy);ctx.lineTo(2,yy+6);ctx.closePath();ctx.fill();ctx.stroke()}
+  ctx.shadowBlur=0;ctx.strokeStyle='#fff6c0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-8,-18);ctx.lineTo(-8,18);ctx.stroke();ctx.restore()}
  // blood spurt, golden light
- if(e.fin!==undefined){const a=e.dkv,[Px,Py]=e.P,tau=(t-e.fin)*4;
+ if(e.fin!==undefined){const [Px,Py]=e.P,tau=(t-e.fin)*4;
   if(e.dr){ctx.save();ctx.lineCap='round';e.dr.forEach(o=>{const u=tau-o.s;if(u<=0)return;const x=Px+o.vx*u,y=Py+o.vy*u+260*u*u;if(y>G+92)return;const u2=Math.max(0,u-.06),x2=Px+o.vx*u2,y2=Py+o.vy*u2+260*u2*u2;
    ctx.strokeStyle=o.c;ctx.lineWidth=o.w;ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle=o.c;ctx.beginPath();ctx.arc(x,y,o.w*.7,0,7);ctx.fill()});ctx.restore()}
   if(a>0){ctx.save();ctx.globalCompositeOperation='lighter';const fl=.75+.25*Math.sin(time*40);
-   const gr=ctx.createRadialGradient(Px,Py,0,Px,Py,340);gr.addColorStop(0,'rgba(255,240,150,'+(.75*a*fl)+')');gr.addColorStop(.35,'rgba(255,200,40,'+(.4*a)+')');gr.addColorStop(1,'rgba(255,170,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(Px,Py,340,0,7);ctx.fill();
-   for(let i=0;i<16;i++){const an=i/16*6.283+time*.4,len=380+80*Math.sin(time*3+i);ctx.fillStyle='rgba(255,225,90,'+(.18*a)+')';ctx.beginPath();ctx.moveTo(Px,Py);ctx.lineTo(Px+Math.cos(an-.05)*len,Py+Math.sin(an-.05)*len);ctx.lineTo(Px+Math.cos(an+.05)*len,Py+Math.sin(an+.05)*len);ctx.fill()}
-   [f.x,g.x].forEach(x=>{const r=ctx.createRadialGradient(x,G-90,0,x,G-90,150);r.addColorStop(0,'rgba(255,225,100,'+(.35*a)+')');r.addColorStop(1,'rgba(255,200,40,0)');ctx.fillStyle=r;ctx.beginPath();ctx.arc(x,G-90,150,0,7);ctx.fill()});
-   ctx.restore()}}
+   const gr=ctx.createRadialGradient(Px,Py,0,Px,Py,300);gr.addColorStop(0,'rgba(255,240,150,'+(.6*a*fl)+')');gr.addColorStop(.4,'rgba(255,200,40,'+(.3*a)+')');gr.addColorStop(1,'rgba(255,170,0,0)');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(Px,Py,300,0,7);ctx.fill();ctx.restore()}}
  ctx.restore()}
 
 </script></body></html>
