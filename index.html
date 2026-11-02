@@ -62,7 +62,7 @@ function bl(c,k){if(c[0]!=='#'||c.length!==7)return c;const n=parseInt(c.slice(1
 // fixed damage (ignores pace/dodge). q = quiet (no text, no knockdown)
 function fixed(f,tg,d,q){if(im20(f,tg))return false;if(tg.t===16&&itaIn(f,tg)){fixed(tg,f,d,q);return false}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return false;if(imm(tg)){if(!q)txt(tg.x,G-200,'IMMUNE','#cde');return false}
  if(tg.t===19&&logGuard(f,tg,d))return false;
- tg.hp-=d;if(dur<40&&d<60)tg.hp=Math.max(tg.hp,Math.min(15,tg.h0*.3));tg.flash=.25;
+ tg.hp-=d;combatSfx();if(dur<40&&d<60)tg.hp=Math.max(tg.hp,Math.min(15,tg.h0*.3));tg.flash=.25;
  if(!q){tg.down=Math.max(tg.down,1);txt(tg.x+R(-20,20),G-200,Math.round(d),'#ff5a4a')}
  if(tg.hp<=0&&docSave(tg)){}else if(tg.hp<=0&&docSave(tg))return;if(tg.hp<=0){tg.hp=0;tg.dead=true;tg.deaths++;winner=f;phase='end';pt=0;banner=BN(f.t)+' wins!'+' '+T[tg.t].n+' is OUT FOR GOOD!';bannerT=3}
  return true}
@@ -207,14 +207,15 @@ function drawAmb(){if(amb.fire){drawAmbFire(amb);if(amb.ex)return}const a=amb,t=
  if(t>=2.9&&t<5.3&&!a.fall){const g=a.g,c=g.x-g.face*g.sc*48;ctx.save();ctx.globalAlpha=Math.max(0,a.med[0].al);ctx.fillStyle='#d5dde2';ctx.strokeStyle='#7d858d';ctx.lineWidth=2;ctx.fillRect(c-100,G-22,200,8);ctx.strokeRect(c-100,G-22,200,8);ctx.restore()}
  a.med.forEach(m=>{if(m.al>0)person(m,false)})}
 function im20(f,tg){const e=fx.find(q=>(q.k=='Bt'||q.k=='Sg')&&q.f===f&&q.tg===tg);if(!e)return false;if(e.im20===undefined)e.im20=Math.random()<.2;if(!e.im20)return false;if(!e.imT||time-e.imT>.6){e.imT=time;txt(tg.x,G-200,'IMMUNE','#cde');spawn(tg.x,G-90,'#fff',6)}return true}
-const PUNCH_URL='https://gjyeknwtoofpuvoaftfj.supabase.co/storage/v1/object/public/suara/punch1.mp3';
-const PUNCH_RE=/punch|knuck|fist|jab|uppercut|haymaker|slap|kick/i;let punchPool=null,punchI=0,punchLast=0;
-function punchSfx(){try{if(!punchPool){punchPool=[0,1,2,3].map(()=>{const a=new Audio(PUNCH_URL);a.preload='auto';a.volume=.7;return a})}
- const n=performance.now();if(n-punchLast<70)return;punchLast=n;const a=punchPool[punchI++%punchPool.length];a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(e){}}
+const SFX_BASE='https://gjyeknwtoofpuvoaftfj.supabase.co/storage/v1/object/public/suara/';
+function mkSfx(file,vol,gap){let pool=null,i=0,last=0;return()=>{try{if(!pool)pool=[0,1,2,3].map(()=>{const a=new Audio(SFX_BASE+file);a.preload='auto';a.volume=vol;return a});
+ const n=performance.now();if(n-last<gap)return;last=n;const a=pool[i++%pool.length];a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(e){}}}
+const punchSfx=mkSfx('punch1.mp3',.7,70),combatSfx=mkSfx('combat.mp3',.7,70);
+const PUNCH_RE=/punch|knuck|fist|jab|uppercut|haymaker|slap/i;
 function dealt(f,tg,base,name,nd,ex){if(im20(f,tg))return;if(tg.t===16&&itaIn(f,tg)){dealt(tg,f,base,name,true,ex);return}if(tg.dead||phase!=='fight'||(amb&&amb.pause))return;if(imm(tg)){if(ex!==2)txt(tg.x,G-200,'IMMUNE','#cde');spawn(tg.x,G-90,'#fff',6);return}
  if(tg.t===19&&logGuard(f,tg,base))return;
  if(!nd&&!ex&&!tg.zz&&Math.random()<.16){txt(tg.x,G-190*tg.ts/1.7*1.0-20,'DODGE','#cfe');if(!tg.jy&&!tg.fly)tg.jv=-560;return}
- let d=ex?base:base*(adv(f)?ADV:1)*R(.85,1.15);const big=d>=60;if(!big&&!ex)d*=pace();tg.hp-=d;if(PUNCH_RE.test(String(name||'')))punchSfx();
+ let d=ex?base:base*(adv(f)?ADV:1)*R(.85,1.15);const big=d>=60;if(!big&&!ex)d*=pace();tg.hp-=d;if(PUNCH_RE.test(String(name||'')))punchSfx();else combatSfx();
  if(dur<40&&!big)tg.hp=Math.max(tg.hp,Math.min(15,tg.h0*.3));
  if(!ex&&(d>70||Math.random()<.05))tg.down=.8;tg.flash=.25;if(ex!==2&&!(f.t===2&&/Punch|Kick/.test(name)))txt(tg.x+R(-20,20),G-200,Math.round(d),adv(f)?'#ffd24a':'#fff');spawn(tg.x,G-90,T[f.t].ac||T[f.t].c,10);
  if(tg.hp<=0){tg.hp=0;tg.dead=true;tg.deaths++;winner=f;phase='end';pt=0;banner=BN(f.t)+' wins!'+' '+T[tg.t].n+' is OUT FOR GOOD!';bannerT=3;return}
