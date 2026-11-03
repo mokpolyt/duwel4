@@ -3986,6 +3986,54 @@ function drawWL(e){if(e.d===undefined)return;const f=e.f,g=e.tg,t=e.tm,sc=f.sc,f
  if(f.al!==undefined&&f.al<.5)return;
  WL.ST.forEach((q,si)=>{for(let h=0;h<q.n;h++){const k=(t-(WL.T[si]+WL.H0+h*WL.HP-.05))/.16;if(k>=0&&k<=1){const p=Math.sin(Math.PI*k);if(q.k)mirKick(f.x,f.ff||e.d,sc,p,'#ff4fc8');else mirPunch(f.x,f.ff||e.d,sc,p,f.rise||0,'#ff4fc8')}}})}
 
+// ===== GIMBIK: COCONUT GROVE (7 trees planted at the start; she unplugs them one by one and hurls them at the belly, 80% hit) =====
+const PT={RUN:.45,P1:1.45,T0:2.0,FL:.4,L:220};PT.T1=PT.T0+PT.FL;PT.RIP=PT.T1+.6;PT.END=PT.RIP+.7;
+function mkGrove(){const trees=[];for(let i=0;i<7;i++)trees.push({x:80+i*150+R(-18,18),h:R(240,310),lean:R(-45,45),d:R(0,.8),st:'up',sp:0});
+ const pulls=[];let a=R(3.5,6);for(let i=0;i<7;i++){pulls.push(a);a+=R(4.5,8)}
+ return{t:0,k:0,cool:R(3.5,6),need:0,trees,pulls}}
+function grTick(f,i,dt){if(f.t!==19||f.dead||phase!=='fight'||(amb&&amb.pause))return;
+ if(!f.grove){f.grove=mkGrove();banner='Gimbik PLANTS 7 COCONUT TREES!';bannerT=2;logS='Gimbik \u00b7 COCONUT GROVE!';logT=2;shake=Math.max(shake,6)}
+ const gv=f.grove,en=D[1-i];gv.t+=dt;
+ gv.trees.forEach(q=>{if(!q.sp&&gv.t>=q.d){q.sp=1;spawn(q.x,G,'#7a5230',12,5);spawn(q.x,G,'#ddd',6,4)}});
+ if(gv.k<7&&!gv.need&&gv.t>=gv.cool&&en&&!en.dead&&FR(en)&&!f.so&&!f.sw&&!f.tn&&!f.kk&&!f.fm&&!f.dk&&!f.sm&&f.cfx==null&&!f.rise&&!f.fly&&f.down<.3&&!f.rv&&!f.split&&!amb&&!fx.some(q=>(q.f===f||q.tg===f)&&q.k!=='MT')){
+  gv.k++;gv.need=1;f.gcd=Math.max(f.gcd,3.2);logS='Gimbik \u00b7 TREE THROW!';logT=2;fx.push({k:'Pt',f,tg:en,tm:0})}}
+function drawGrove(f){const gv=f.grove;gv.trees.forEach(q=>{
+ if(q.st==='gone'){ctx.fillStyle='#4a3320';ctx.beginPath();ctx.ellipse(q.x,G+5,22,6,0,0,7);ctx.fill();ctx.fillStyle='#6a4a2a';ctx.beginPath();ctx.ellipse(q.x,G+3,14,3.5,0,0,7);ctx.fill();return}
+ if(q.st!=='up'&&q.st!=='pull')return;const p=ez((gv.t-q.d)/1.1);if(p<=.01)return;
+ ctx.save();ctx.globalAlpha=.92;if(q.st==='pull')ctx.translate(Math.sin(time*55)*3,0);ctx.translate(q.x,G);ctx.scale(1,p);ctx.translate(-q.x,-G);palm(q.x,q.h,q.lean);ctx.restore()})}
+function stepPT(e,dt){const f=e.f,g=e.tg,t=e.tm,gv=f.grove,S=PT,L=S.L,c=x=>Math.max(60,Math.min(1020,x));
+ if(!gv)return false;
+ if(e.d===undefined){const ups=gv.trees.filter(q=>q.st==='up'&&gv.t-q.d>1.2);if(!ups.length){gv.k--;gv.need=0;gv.cool=gv.t+2;return false}
+  e.tr=ups[Math.floor(R(0,ups.length))];e.tr.st='pull';e.d=Math.sign(g.x-f.x)||1;e.x0=f.x;e.tx=c(e.tr.x);e.gx=g.x;e.h={};e.ok=Math.random()<.8;e.pz=null}
+ const d=e.d,tr=e.tr;
+ const cl=()=>{f.cfx=null;f.ff=0;if(!(amb&&amb.g===f))f.rise=0;g.cfx=null;g.ff=0;if(tr.st==='pull'){tr.st='up';gv.k--;gv.need=0;gv.cool=gv.t+2}else if(tr.st==='held')tr.st='gone';e.pz=null};
+ if(abortFx(e,f,g)||f.rv||f.fly||f.split>0||(t<S.T1&&imm(g))){cl();return false}
+ if(t>=S.END){cl();f.gcd=Math.max(f.gcd,R(1,1.5));return false}
+ const ev=(k,at,fn)=>{if(t>=at&&!e.h[k]){e.h[k]=1;fn()}},setX=x=>{f.x=x;f.tx=x;f.cfx=x};
+ f.gcd=Math.max(f.gcd,1.2);f.jt=Math.max(f.jt,3);f.jy=0;f.jv=0;f.kb=0;
+ const hold=e.ok?S.T1:S.T0+S.FL*.55;
+ if(t>=.2&&t<hold){g.sw=null;g.tn=null;g.kk=null;g.fm=null;g.dk=null;g.sm=null;g.so=null;g.flp=0;g.gcd=Math.max(g.gcd,1.2);g.jt=Math.max(g.jt,1);g.jy=0;g.jv=0;g.kb=0;g.fly=false;g.down=0;g.cfx=e.gx}
+ if(t<S.RUN){const v=ez(t/S.RUN);setX(e.x0+(e.tx-e.x0)*v);f.ff=Math.sign(e.tx-e.x0)||d;f.anim=Math.max(f.anim,.12);if(Math.random()<.7)parts.push({x:f.x,y:G,vx:R(-1,1),vy:R(-1.5,-.3),l:.4,c:'#cbb8a0',r:R(2,4)})}
+ else{setX(e.tx);f.ff=d}
+ ev('g',S.RUN,()=>{banner='Gimbik grabs a COCONUT TREE...';bannerT=1.4});
+ if(t>=S.RUN&&t<S.P1-.3&&Math.random()<.6)parts.push({x:tr.x+R(-14,14),y:G,vx:R(-2,2),vy:R(-3,-1),l:.45,c:'#7a5230',r:R(2,4)});
+ ev('up',S.P1-.3,()=>{tr.st='held';f.anim=.4;shake=Math.max(shake,10);spawn(tr.x,G,'#7a5230',30,8);spawn(tr.x,G,'#ddd',14,6);banner='UNPLUGGED!';bannerT=1.2});
+ ev('wd',S.T0-.3,()=>{banner='She aims at the BELLY...';bannerT=1.2});
+ ev('th',S.T0,()=>{f.anim=.5;shake=Math.max(shake,4);banner='Gimbik THROWS the tree!';bannerT=1.2});
+ const hx=f.x+d*24,hy=G-95,sa=-d*Math.PI/2,ex=e.ok?e.gx-d*L/2+d*14:e.gx+d*260-d*L/2*Math.sin(1.1),ey=e.ok?G-70:G+10-L/2*Math.cos(1.1),ea=e.ok?sa:-d*1.1;
+ if(t>=S.P1-.3&&t<S.T0){const k=ez((t-(S.P1-.3))/.3),bx=tr.x+(hx-tr.x)*k,by=G+(hy-G)*k,ang=sa*ez((t-S.P1)/(S.T0-S.P1));e.pz={x:bx+L/2*Math.sin(ang),y:by-L/2*Math.cos(ang),a:ang,al:1}}
+ else if(t>=S.T0&&t<S.T1){const u=(t-S.T0)/S.FL,sx=hx-d*L/2;e.pz={x:sx+(ex-sx)*u,y:hy+(ey-hy)*u-28*Math.sin(Math.PI*u),a:sa+(ea-sa)*u,al:1};if(Math.random()<.8)parts.push({x:e.pz.x+d*L/2,y:e.pz.y,vx:R(-1,1),vy:R(-1,1),l:.3,c:'#8a5a2a',r:R(2,4)})}
+ else if(t>=S.T1){const fa=Math.max(0,1-(t-S.RIP)/.4),sh=e.ok&&t>=S.RIP?-d*(t-S.RIP)*260:0;e.pz={x:ex+sh,y:ey,a:ea,al:fa}}
+ ev('rel',hold,()=>{g.cfx=null});
+ ev('dg',S.T0+S.FL*.6,()=>{if(!e.ok){txt(g.x,G-200,'DODGE','#cfe');if(!g.jy&&!g.fly)g.jv=-560;spawn(g.x,G-90,'#cfe',8,4)}});
+ ev('hit',S.T1,()=>{if(e.ok){const hit=fixed(f,g,55,true);if(hit)txt(g.x+R(-16,16),G-190,55,'#ff5a4a');
+   spawn(g.x,G-70,'#b3121a',110,10);spawn(g.x,G-70,'#7a0a10',50,8);spawn(g.x,G-70,'#fff6c8',14,7);splat(g.x,true,12);splat(g.x+R(-90,90),true,12);redT=Math.max(redT,9);shake=Math.max(shake,22);envFlash=Math.max(envFlash,.4);
+   if(hit&&!g.dead&&!imm(g)){g.chole=1;g.bleed=6;g.bld=.1;g.bleedBy=f;g.down=Math.max(g.down,1.2);g.kb=d*260;banner='The tree TEARS his BELLY open!';bannerT=1.8}}
+  else{spawn(e.pz.x+d*L/2,G+6,'#7a5230',26,7);spawn(e.pz.x+d*L/2,G,'#ddd',14,5);shake=Math.max(shake,6);banner='MISSED! The tree sticks in the ground!';bannerT=1.5}});
+ ev('rip',S.RIP,()=>{if(e.ok&&!g.dead){f.anim=.5;spawn(g.x,G-70,'#b3121a',70,9);splat(g.x,true,12);shake=Math.max(shake,14);if(fixed(f,g,12,true))txt(g.x+R(-16,16),G-170,12,'#ff5a4a');banner='...and she RIPS it out!';bannerT=1.4}});
+ return true}
+function drawPT(e){if(!e.pz)return;const p=e.pz;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,p.al));ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.translate(0,PT.L/2-G);palm(0,PT.L,0);ctx.restore()}
+
 // ---- Sonya technique 2: BAMBOO AMBUSH ----
 // bamboo grows, she leaps from stalk to stalk, lands behind the enemy, grabs the head and hurls him across the arena
 const SB={G0:1.0,H:.42,NH:5};SB.TL=SB.G0+SB.NH*SB.H;SB.GR=SB.TL+.5;SB.TH=SB.GR+.4;SB.END=SB.TH+3.1;
